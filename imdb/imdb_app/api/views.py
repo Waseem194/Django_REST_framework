@@ -21,9 +21,26 @@ def movie_list(request):
         return Response(serializer.errors)
         
        
-@api_view()
+@api_view(['GET', 'PUT', 'DELETE'])
 
 def movie_detail(request,pk):
-    movie = Movie.objects.get(pk= pk)
-    serializer = MovieSerializer(movie)
-    return Response(serializer.data)
+    if request.method == "GET":
+        movie = Movie.objects.get(pk= pk)
+        serializer = MovieSerializer(movie)
+        return Response(serializer.data)
+    
+    if request.method == "PUT":
+        movie = Movie.objects.get(pk = pk)
+        
+        serializer = MovieSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.update()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=400)
+        
+        
+    # if request.method == "DELETE":
+    #     serializer.delete()
+    #     return Response()
+        
+        
