@@ -9,9 +9,11 @@ from imdb_app.api.serializers import WatchListSerializer, StreamPlatformSerializ
 
 
 class StremPlatformApiView(APIView):
+    
     def get(self,request):
         platform = StreamPlatform.objects.all()
-        serializer = StreamPlatformSerializer(platform, many = True)
+        serializer = StreamPlatformSerializer(platform, many = True, context = {'request': request}) 
+        # context={'request': request}
         return Response(serializer.data)
     
     def post(self,request):
@@ -20,8 +22,34 @@ class StremPlatformApiView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+    
 
+class StremPlatformDetailApiView(APIView):
+    
+    def get(self,request,pk):
+        try:
+            platform = StreamPlatform.objects.get(pk= pk)
+        except  StreamPlatform.DoesNotExist:
+            return Response({'Error': 'Movie not found'},status=status.HTTP_404_NOT_FOUND)
+        serializer = StreamPlatformSerializer(platform, context={'request': request})
+        return Response(serializer.data)
+    
+    def put(self,request,pk):
+        
+        stream = StreamPlatform.objects.get(pk = pk)
+        serializer = StreamPlatformSerializer(stream, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+     
+    def delete(self , request, pk):
+        movie = StreamPlatform.objects.get(pk = pk)
+        movie.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
+            
 
+        
 class WatchListApiView(APIView):
     def get(self, request):
         WatchMovies = WatchList.objects.all()
