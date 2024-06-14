@@ -2,11 +2,6 @@ from django.utils.timezone import now
 from rest_framework import serializers
 from imdb_app.models import WatchList,StreamPlatform
 
-class StreamPlatformSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StreamPlatform
-        fields = "__all__"
-    
 
 class WatchListSerializer(serializers.ModelSerializer):
     # len_name = serializers.SerializerMethodField()
@@ -16,6 +11,40 @@ class WatchListSerializer(serializers.ModelSerializer):
     class Meta:
         model = WatchList
         fields = "__all__"
+        
+# class StreamPlatformSerializer(serializers.ModelSerializer):
+class StreamPlatformSerializer(serializers.HyperlinkedModelSerializer):
+    # If you have all fields or all variables which in Database
+    watchlist = WatchListSerializer(many = True, read_only = True) 
+    
+    # StringRelatedField
+    # watchlist = serializers.StringRelatedField(many=True) # if you want only name or title
+    
+    # PrimaryKeyRelatedField
+    # watchlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True) # if you read only id
+    
+    # HyperlinkedRelatedField
+    # watchlist = serializers.HyperlinkedRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     view_name='WatchListDetailApiView'
+    # ) # if you access only URL of the movie then it work field
+    
+    # SlugRelatedField
+    
+    #     watchlist = serializers.SlugRelatedField(
+    #         many=True,
+    #         read_only=True,
+    #         slug_field="id"
+    #  ) # if you access only ONE element or ONE field
+    
+    # HyperlinkedIdentityField
+    # watclist = serializers.HyperlinkedIdentityField(view_name='WatchListDetailApiView') # if you access URL with id then use this
+   
+    class Meta:
+        model = StreamPlatform
+        fields = "__all__"
+    
         
         # fields = ['id', 'name','description','active']
         # exclude = ['description']
