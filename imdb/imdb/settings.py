@@ -40,9 +40,6 @@ INSTALLED_APPS = [
     'imdb_app',
     'rest_framework',
     
-    
-    
-
 ]
 
 MIDDLEWARE = [
