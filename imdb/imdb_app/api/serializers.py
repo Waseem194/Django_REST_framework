@@ -23,6 +23,7 @@ class WatchListSerializer(serializers.ModelSerializer):
 class StreamPlatformSerializer(serializers.ModelSerializer):
 # class StreamPlatformSerializer(serializers.HyperlinkedModelSerializer):
     # If you have all fields or all variables which in Database
+
     watchlist = WatchListSerializer(many = True, read_only = True) 
     
     # StringRelatedField

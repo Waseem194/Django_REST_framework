@@ -6,8 +6,10 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from imdb_app.api.permissions import AdminOrReadOnly
 from rest_framework import mixins
+
 
 
 
@@ -35,7 +37,8 @@ class ReviewList(generics.ListAPIView):
 
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         pk = self.kwargs['pk']
         return Review.objects.filter(watchlist=pk)
@@ -45,7 +48,8 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    
+    permission_classes = [IsAuthenticated]
+    permission_classes = [AdminOrReadOnly]
 
 # class ReviewDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
             
