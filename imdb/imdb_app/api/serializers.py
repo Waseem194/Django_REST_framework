@@ -1,19 +1,29 @@
 from django.utils.timezone import now
 from rest_framework import serializers
-from imdb_app.models import WatchList,StreamPlatform
+from imdb_app.models import WatchList,StreamPlatform,Review
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    review_user = serializers.StringRelatedField(read_only = True)
+    class Meta:
+        model = Review
+        exclude = ('watchlist',)
+        # fields = "__all__" 
+        
+        
 class WatchListSerializer(serializers.ModelSerializer):
     # len_name = serializers.SerializerMethodField()
     # days_since_joined = serializers.SerializerMethodField()
-  
+    reviews = ReviewSerializer(many = True, read_only= True)
 
     class Meta:
         model = WatchList
         fields = "__all__"
+
         
+         
 # class StreamPlatformSerializer(serializers.ModelSerializer):
-class StreamPlatformSerializer(serializers.HyperlinkedModelSerializer):
+class StreamPlatformSerializer(serializers.ModelSerializer):
     # If you have all fields or all variables which in Database
     watchlist = WatchListSerializer(many = True, read_only = True) 
     
