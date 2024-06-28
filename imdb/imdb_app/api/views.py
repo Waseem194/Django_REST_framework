@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from imdb_app.api.permissions import AdminOrReadOnly
+from imdb_app.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly 
 from rest_framework import mixins
 
 
@@ -22,6 +22,7 @@ class ReviewCreate(generics.CreateAPIView):
     
     def get_queryset(self):
         return Review.objects.all()
+    
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
         movie = WatchList.objects.get(pk = pk) 
@@ -37,7 +38,7 @@ class ReviewList(generics.ListAPIView):
 
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -49,7 +50,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated]
-    permission_classes = [AdminOrReadOnly]
+    permission_classes = [ ReviewUserOrReadOnly]
 
 # class ReviewDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
             
